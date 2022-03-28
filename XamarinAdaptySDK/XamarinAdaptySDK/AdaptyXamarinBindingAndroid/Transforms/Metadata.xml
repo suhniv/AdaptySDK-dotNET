@@ -1,0 +1,19 @@
+﻿<metadata>
+  <!--
+  This sample removes the class: android.support.v4.content.AsyncTaskLoader.LoadTask:
+  <remove-node path="/api/package[@name='android.support.v4.content']/class[@name='AsyncTaskLoader.LoadTask']" />
+  
+  This sample removes the method: android.support.v4.content.CursorLoader.loadInBackground:
+  <remove-node path="/api/package[@name='android.support.v4.content']/class[@name='CursorLoader']/method[@name='loadInBackground']" />
+  -->
+
+  <attr path="api/package[@name='com.adapty']/class[@name='Adapty.Companion']" name="managedName">Adapty.CompanionClass</attr>
+  <attr path="api/package[@name='com.adapty.api']/class[@name='ApiClient.Companion']" name="managedName">Api.ApiClient.CompanionClass</attr>
+  <!--<attr path="api/package[@name='com.adapty.api']/class[@name='ApiClientRepository.Factory']" name="managedName">Api.ApiClientRepository.FactoryClass</attr>-->
+  <!--<attr path="api/package[@name='com.adapty.utils']/class[@name='LogHelper.Companion']" name="managedName">LogHelper.CompanionClass</attr>-->
+  <attr path="api/package[@name='com.adapty.utils']/class[@name='PreferenceManager.Companion']" name="managedName">PreferenceManager.CompanionClass</attr>
+  <attr path="api/package[@name='com.adapty.utils.push']/class[@name='AdaptyPushHandler.Companion']" name="managedName">AdaptyPushHandler.CompanionClass</attr>
+
+  <!--<add-node path="api/package[@name='com.adapty']/class[@name='Adapty.Companion']/method[@name='makePurchase' and count(parameter)=4 and parameter[1][@type='android.app.Activity'] and parameter[2][@type='com.adapty.api.entity.containers.Product'] and parameter[3][@type='java.lang.String'] and parameter[4][@type='kotlin.jvm.functions.Function3&lt;? super com.adapty.api.responses.RestoreReceiptResponse, ? super java.lang.String, kotlin.Unit&gt;']]"></add-node>-->
+
+</metadata>
