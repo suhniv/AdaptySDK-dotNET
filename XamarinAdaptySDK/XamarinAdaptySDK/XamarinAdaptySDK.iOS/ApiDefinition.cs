@@ -713,15 +713,15 @@ namespace AdaptyBinding
 
 		// @property (copy, nonatomic) NSDictionary<NSString *,AccessLevelInfoModel *> * _Nonnull accessLevels;
 		[Export ("accessLevels", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, AccessLevelInfoModel> AccessLevels { get; set; }
+		NSDictionary<NSString, NSObject> AccessLevels { get; set; }
 
 		// @property (copy, nonatomic) NSDictionary<NSString *,SubscriptionInfoModel *> * _Nonnull subscriptions;
 		[Export ("subscriptions", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, SubscriptionInfoModel> Subscriptions { get; set; }
+		NSDictionary<NSString, NSObject> Subscriptions { get; set; }
 
 		// @property (copy, nonatomic) NSDictionary<NSString *,NSArray<NonSubscriptionInfoModel *> *> * _Nonnull nonSubscriptions;
 		[Export ("nonSubscriptions", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, NSArray<NonSubscriptionInfoModel>> NonSubscriptions { get; set; }
+		NSDictionary<NSString, NSObject> NonSubscriptions { get; set; }
 
 		// -(BOOL)isEqual:(id _Nullable)object __attribute__((warn_unused_result("")));
 		[Export ("isEqual:")]

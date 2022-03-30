@@ -37,11 +37,13 @@ namespace XamarinAdaptySDK
             MicrosPrice = Convert.ToInt64((productModel.SkProduct?.Price.DoubleValue ?? default) * 1000000),
             SubscriptionPeriod = new()
             {
-                Unit = productModel.SubscriptionPeriod?.Unit.ToPeriodUnit() ?? PeriodUnit.Unknown
+                Unit = productModel.SubscriptionPeriod?.Unit.ToPeriodUnit() ?? PeriodUnit.Unknown,
+                NumberOfUnits = (int?)productModel.SubscriptionPeriod?.NumberOfUnits ?? 0
             },
             FreeTrialPeriod = new()
             {
-                Unit = productModel.IntroductoryDiscount?.SubscriptionPeriod.Unit.ToPeriodUnit() ?? PeriodUnit.Unknown
+                Unit = productModel.IntroductoryDiscount?.SubscriptionPeriod.Unit.ToPeriodUnit() ?? PeriodUnit.Unknown,
+                NumberOfUnits = (int?)productModel.IntroductoryDiscount?.SubscriptionPeriod?.NumberOfUnits ?? 0
             }
         };
 
@@ -72,7 +74,7 @@ namespace XamarinAdaptySDK
         };
 
         private static Dictionary<string, PaidAccessLevelInfo> ToPaidAccessLevelInfos(
-            this NSDictionary<NSString, AccessLevelInfoModel> accessLevelInfos)
+            this NSDictionary<NSString, NSObject> accessLevelInfos)
         {
             var result = new Dictionary<string, PaidAccessLevelInfo>();
 
@@ -125,7 +127,7 @@ namespace XamarinAdaptySDK
             };
 
         private static Dictionary<string, Subscription> ToSubscriptions(
-            this NSDictionary<NSString, SubscriptionInfoModel> subscriptionInfos)
+            this NSDictionary<NSString, NSObject> subscriptionInfos)
         {
             var result = new Dictionary<string, Subscription>();
 
@@ -181,7 +183,7 @@ namespace XamarinAdaptySDK
         };
 
         private static Dictionary<string, NonSubscription[]> ToNonSubscriptions(
-            this NSDictionary<NSString, NSArray<NonSubscriptionInfoModel>> nonSubscriptionInfos)
+            this NSDictionary<NSString, NSObject> nonSubscriptionInfos)
         {
             var result = new Dictionary<string, NonSubscription[]>();
 
