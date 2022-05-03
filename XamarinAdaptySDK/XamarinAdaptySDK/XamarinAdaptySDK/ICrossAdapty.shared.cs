@@ -20,6 +20,7 @@ namespace XamarinAdaptySDK
         Task IdentifyAsync(string customerUserId);
         Task SetVariationIdAsync(string variationId, string transactionId);
         Task LogoutAsync();
+        Task LogShowPaywallAsync(Paywall paywall);
         Task SetExternalAnalyticsEnabled(bool enabled = true);
         Task UpdateAttributionAsync(AttributionType attribution, AttributionNetwork attributionNetwork, string userId);
         Task<Paywall[]?> GetPaywallsAsync(bool forceUpdate = false);

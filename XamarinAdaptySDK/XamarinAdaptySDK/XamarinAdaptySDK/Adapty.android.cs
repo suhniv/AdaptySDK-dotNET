@@ -43,6 +43,11 @@ namespace XamarinAdaptySDK
             return callback.Task;
         }
 
+        public Task LogShowPaywallAsync(Paywall paywall)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SetExternalAnalyticsEnabled(bool enabled = true)
         {
             var callback = new VoidCallback();

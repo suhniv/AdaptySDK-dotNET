@@ -47,6 +47,15 @@ namespace XamarinAdaptySDK
             return tcs.Task;
         }
 
+        public Task LogShowPaywallAsync(Paywall paywall)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            NativeAdapty.LogShowPaywall(paywall.NativePaywall, error => { tcs.TrySetResult(error); });
+
+            return tcs.Task;
+        }
+
         public Task SetExternalAnalyticsEnabled(bool enabled = true)
         {
             var tcs = new TaskCompletionSource<bool>();
