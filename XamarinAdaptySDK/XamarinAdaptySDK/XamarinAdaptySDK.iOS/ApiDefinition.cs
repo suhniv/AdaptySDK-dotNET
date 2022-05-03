@@ -228,10 +228,10 @@ namespace AdaptyBinding
 		// [Export ("setFallbackPaywalls:completion:")]
 		// void SetFallbackPaywalls (string paywalls, [NullAllowed] Action<AdaptyError> completion);
 		//
-		// // +(void)logShowPaywall:(PaywallModel * _Nonnull)paywall completion:(void (^ _Nullable)(AdaptyError * _Nullable))completion;
-		// [Static]
-		// [Export ("logShowPaywall:completion:")]
-		// void LogShowPaywall (PaywallModel paywall, [NullAllowed] Action<AdaptyError> completion);
+		// +(void)logShowPaywall:(PaywallModel * _Nonnull)paywall completion:(void (^ _Nullable)(AdaptyError * _Nullable))completion;
+		[Static]
+		[Export ("logShowPaywall:completion:")]
+		void LogShowPaywall (PaywallModel paywall, [NullAllowed] Action<AdaptyError> completion);
 
 		// +(void)setExternalAnalyticsEnabled:(BOOL)enabled completion:(void (^ _Nullable)(AdaptyError * _Nullable))completion;
 		[Static]
