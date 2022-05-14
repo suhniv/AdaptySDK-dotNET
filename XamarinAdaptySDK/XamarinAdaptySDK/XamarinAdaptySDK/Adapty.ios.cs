@@ -80,8 +80,7 @@ namespace XamarinAdaptySDK
             return tcs.Task;
         }
 
-        public Task UpdateAttributionAsync(NSDictionary attribution, AttributionNetwork attributionNetwork,
-            string userId)
+        public Task UpdateAttributionAsync(NSDictionary attribution, AttributionNetwork attributionNetwork, string userId)
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -103,6 +102,8 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<Paywall[]?>();
 
+            Paywall[]? result = null;
+
             NativeAdapty.GetPaywallsWithForceUpdate(forceUpdate, (paywalls, products, error) =>
             {
                 if (error == null)
@@ -112,9 +113,12 @@ namespace XamarinAdaptySDK
                         if (paywalls.Where(p => p.Products.All(product => product.SkProduct != null)).ToList() is
                             { Count: > 0 } loadedPaywalls)
                         {
-                            var crossPaywalls = loadedPaywalls.Select(p => p.ToPaywall());
+                            result = loadedPaywalls.Select(p => p.ToPaywall()).ToArray();
 
-                            tcs.TrySetResult(crossPaywalls.ToArray());
+                            if (result.Length == (int)paywalls.Count)
+                            {
+                                tcs.TrySetResult(result);
+                            }
                         }
                     }
                     else if (products != null && products.Any())
@@ -144,7 +148,7 @@ namespace XamarinAdaptySDK
 
             Task.Delay(5000).ContinueWith(_ =>
             {
-                tcs.SetResult(null);
+                tcs.SetResult(result);
             });
 
             return tcs.Task;
