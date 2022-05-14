@@ -24,7 +24,10 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            NativeAdapty.Identify(customerUserId, error => { tcs.TrySetResult(error); });
+            NativeAdapty.Identify(customerUserId, error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -33,7 +36,10 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            NativeAdapty.SetVariationId(variationId, transactionId, error => { tcs.TrySetResult(error); });
+            NativeAdapty.SetVariationId(variationId, transactionId, error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -42,7 +48,10 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            NativeAdapty.Logout(error => { tcs.TrySetResult(error); });
+            NativeAdapty.Logout(error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -51,7 +60,10 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            NativeAdapty.LogShowPaywall(paywall.NativePaywall, error => { tcs.TrySetResult(error); });
+            NativeAdapty.LogShowPaywall(paywall.NativePaywall, error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -60,7 +72,10 @@ namespace XamarinAdaptySDK
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            NativeAdapty.SetExternalAnalyticsEnabled(enabled, error => { tcs.TrySetResult(error); });
+            NativeAdapty.SetExternalAnalyticsEnabled(enabled, error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -76,7 +91,10 @@ namespace XamarinAdaptySDK
                 AttributionNetwork.AppsFlyer => AdaptyBinding.AttributionNetwork.Appsflyer,
                 AttributionNetwork.Branch => AdaptyBinding.AttributionNetwork.Branch,
                 _ => AdaptyBinding.AttributionNetwork.Custom
-            }, userId, error => { tcs.TrySetResult(error); });
+            }, userId, error =>
+            {
+                tcs.TrySetDefaultResult(error);
+            });
 
             return tcs.Task;
         }
@@ -91,14 +109,10 @@ namespace XamarinAdaptySDK
                 {
                     if (paywalls != null && paywalls.Any())
                     {
-                        var paywallsProducts = paywalls
-                            .Select(p => p.Products)
-                            .SelectMany(p => p)
-                            .ToArray();
-
-                        if (paywallsProducts.Any() && paywallsProducts.All(p => p.SkProduct != null))
+                        if (paywalls.Where(p => p.Products.All(product => product.SkProduct != null)).ToList() is
+                            { Count: > 0 } loadedPaywalls)
                         {
-                            var crossPaywalls = paywalls.Select(p => p.ToPaywall());
+                            var crossPaywalls = loadedPaywalls.Select(p => p.ToPaywall());
 
                             tcs.TrySetResult(crossPaywalls.ToArray());
                         }
@@ -106,14 +120,13 @@ namespace XamarinAdaptySDK
                     else if (products != null && products.Any())
                     {
                         //Here must be All but there is a bug in Adapty
-                        //if (products.All(p => p.SkProduct != null))
-                        if (products.Any(p => p.SkProduct != null))
+                        if (products.Where(p => p.SkProduct != null).ToList() is { Count: > 0 } loadedProducts)
                         {
                             tcs.TrySetResult(new[]
                             {
                                 new Paywall
                                 {
-                                    Products = products.Select(p => p.ToProduct()).ToArray()
+                                    Products = loadedProducts.Select(p => p.ToProduct()).ToArray()
                                 }
                             });
                         }
@@ -127,6 +140,11 @@ namespace XamarinAdaptySDK
                 {
                     tcs.TrySetException(new AdaptySdkException(error.Description));
                 }
+            });
+
+            Task.Delay(5000).ContinueWith(_ =>
+            {
+                tcs.SetResult(null);
             });
 
             return tcs.Task;
@@ -197,7 +215,10 @@ namespace XamarinAdaptySDK
             var tcs = new TaskCompletionSource<PurchaserInfo?>();
 
             NativeAdapty.GetPurchaserInfoWithForceUpdate(forceUpdate,
-                (purchaserInfo, error) => { tcs.TrySetResult(purchaserInfo.ToPurchaserInfo, error); });
+                (purchaserInfo, error) =>
+                {
+                    tcs.TrySetResult(purchaserInfo.ToPurchaserInfo, error);
+                });
 
             return tcs.Task;
         }

@@ -75,5 +75,20 @@ namespace XamarinAdaptySDK
                 tcs.TrySetResult(getResult());
             }
         }
+        
+        /// <summary>
+        /// Set result from callback error
+        /// </summary>
+        public static void TrySetDefaultResult<T>(this TaskCompletionSource<T?> tcs, AdaptyError? error)
+        {
+            if (error?.ToException() is { } exception)
+            {
+                tcs.TrySetException(exception);
+            }
+            else
+            {
+                tcs.TrySetResult(default);
+            }
+        }
     }
 }

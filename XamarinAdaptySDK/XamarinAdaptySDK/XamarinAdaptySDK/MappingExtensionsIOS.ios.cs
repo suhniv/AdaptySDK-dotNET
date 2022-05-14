@@ -14,6 +14,7 @@ namespace XamarinAdaptySDK
     {
         public static Paywall ToPaywall(this PaywallModel paywallModel) => new()
         {
+            NativePaywall = paywallModel,
             DeveloperId = paywallModel.DeveloperId,
             Products = paywallModel.Products.Select(ToProduct).ToArray(),
             CustomPayload = paywallModel.CustomPayloadString,
