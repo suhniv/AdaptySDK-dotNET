@@ -146,9 +146,9 @@ namespace XamarinAdaptySDK
                 }
             });
 
-            Task.Delay(5000).ContinueWith(_ =>
+            Task.Delay(10000).ContinueWith(_ =>
             {
-                tcs.SetResult(result);
+                tcs.TrySetResult(result);
             });
 
             return tcs.Task;
