@@ -1,23 +1,17 @@
-using Java.Lang;
-using Kotlin;
-using Kotlin.Jvm.Functions;
+using Com.Adapty.Errors;
+using Com.Adapty.Utils;
+using Java.Interop;
 
 namespace XamarinAdaptySDK.AndroidCallback
 {
-    public class VoidCallback : KotlinCallbackWrapper<bool>, IFunction1
+    public class VoidCallback : KotlinCallbackWrapper<bool>, IErrorCallback
     {
-        public Object Invoke(Object p0)
+        public void OnError(AdaptyError? result)
         {
-            if (p0.ToException() is { } exception)
+            if (result != null && result.JavaCast<AdaptyError>() is { } adaptyError)
             {
-                OnException(exception);
+                SetException(adaptyError.InnerException);
             }
-            else
-            {
-                OnResult(true);
-            }
-
-            return Unit.Instance;
         }
     }
 }

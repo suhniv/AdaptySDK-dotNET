@@ -1,7 +1,7 @@
 ﻿#if IOS
 using ProductModel = AdaptyBinding.ProductModel;
 #elif ANDROID
-using ProductModel = Com.Adapty.Models.ProductModel;
+using ProductModel = Com.Adapty.Models.AdaptyPaywallProduct;
 #endif
 
 namespace XamarinAdaptySDK.Models

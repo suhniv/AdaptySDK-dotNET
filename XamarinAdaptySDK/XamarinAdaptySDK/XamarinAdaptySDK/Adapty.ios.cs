@@ -15,7 +15,7 @@ namespace XamarinAdaptySDK
             NativeAdapty.Activate(apiKey);
         }
 
-        public void Activate(string apiKey, string userId)
+        public void Activate(string apiKey, string userId, bool observerMode = false)
         {
             NativeAdapty.Activate(apiKey, userId);
         }
@@ -98,6 +98,11 @@ namespace XamarinAdaptySDK
             return tcs.Task;
         }
 
+        public Task<Paywall?> GetPaywallAsync(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<Paywall[]?> GetPaywallsAsync(bool forceUpdate = false)
         {
             var tcs = new TaskCompletionSource<Paywall[]?>();
@@ -106,11 +111,13 @@ namespace XamarinAdaptySDK
 
             NativeAdapty.GetPaywallsWithForceUpdate(forceUpdate, (paywalls, products, error) =>
             {
+                var paywallsArray = paywalls?.ToArray();
+                
                 if (error == null)
                 {
-                    if (paywalls != null && paywalls.Any())
+                    if (paywallsArray != null && paywallsArray.Any())
                     {
-                        if (paywalls.Where(p => p.Products.All(product => product.SkProduct != null)).ToList() is
+                        if (paywallsArray.Where(p => p.Products.All(product => product.SkProduct != null)).ToList() is
                             { Count: > 0 } loadedPaywalls)
                         {
                             result = loadedPaywalls.Select(p => p.ToPaywall()).ToArray();
@@ -121,23 +128,23 @@ namespace XamarinAdaptySDK
                             }
                         }
                     }
-                    else if (products != null && products.Any())
-                    {
-                        //Here must be All but there is a bug in Adapty
-                        if (products.Where(p => p.SkProduct != null).ToList() is { Count: > 0 } loadedProducts)
-                        {
-                            tcs.TrySetResult(new[]
-                            {
-                                new Paywall
-                                {
-                                    Products = loadedProducts.Select(p => p.ToProduct()).ToArray()
-                                }
-                            });
-                        }
-                    }
+                    // else if (products != null && products.Any())
+                    // {
+                    //     //Here must be All but there is a bug in Adapty
+                    //     if (products.Where(p => p.SkProduct != null).ToList() is { Count: > 0 } loadedProducts)
+                    //     {
+                    //         tcs.TrySetResult(new[]
+                    //         {
+                    //             new Paywall
+                    //             {
+                    //                 Products = loadedProducts.Select(p => p.ToProduct()).ToArray()
+                    //             }
+                    //         });
+                    //     }
+                    // }
                     else
                     {
-                        tcs.TrySetResult(null);
+                        tcs.TrySetResult(result);
                     }
                 }
                 else
@@ -146,9 +153,12 @@ namespace XamarinAdaptySDK
                 }
             });
 
-            Task.Delay(10000).ContinueWith(_ =>
+            Task.Delay(5000).ContinueWith(_ =>
             {
-                tcs.TrySetResult(result);
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.TrySetResult(result);
+                }
             });
 
             return tcs.Task;
@@ -160,24 +170,24 @@ namespace XamarinAdaptySDK
 
             NativeAdapty.GetPaywallsWithForceUpdate(forceUpdate, (_, products, error) =>
             {
-                if (error == null)
-                {
-                    if (products != null && products.Any())
-                    {
-                        if (products.Any(p => p.SkProduct != null))
-                        {
-                            tcs.TrySetResult(products.Select(p => p.ToProduct()).ToArray());
-                        }
-                    }
-                    else
-                    {
-                        tcs.TrySetResult(null);
-                    }
-                }
-                else
-                {
-                    tcs.TrySetException(new AdaptySdkException(error.Description));
-                }
+                // if (error == null)
+                // {
+                //     if (products != null && products.Any())
+                //     {
+                //         if (products.Any(p => p.SkProduct != null))
+                //         {
+                //             tcs.TrySetResult(products.Select(p => p.ToProduct()).ToArray());
+                //         }
+                //     }
+                //     else
+                //     {
+                //         tcs.TrySetResult(null);
+                //     }
+                // }
+                // else
+                // {
+                //     tcs.TrySetException(new AdaptySdkException(error.Description));
+                // }
             });
 
             return tcs.Task;

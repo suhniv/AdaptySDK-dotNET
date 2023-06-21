@@ -17,9 +17,9 @@ namespace XamarinAdaptySDK
             NativeAdapty.Activate(Platform.AppContext, apiKey);
         }
 
-        public void Activate(string apiKey, string userId)
+        public void Activate(string apiKey, string userId, bool observerMode)
         {
-            NativeAdapty.Activate(Platform.AppContext, apiKey, userId);
+            NativeAdapty.Activate(Platform.AppContext, apiKey, observerMode, userId);
         }
 
         public Task IdentifyAsync(string customerUserId)
@@ -32,7 +32,7 @@ namespace XamarinAdaptySDK
         public Task SetVariationIdAsync(string variationId, string transactionId)
         {
             var callback = new VoidCallback();
-            NativeAdapty.SetTransactionVariationId(transactionId, variationId, callback);
+            NativeAdapty.SetVariationId(transactionId, variationId, callback);
             return callback.Task;
         }
 
@@ -50,9 +50,7 @@ namespace XamarinAdaptySDK
 
         public Task SetExternalAnalyticsEnabled(bool enabled = true)
         {
-            var callback = new VoidCallback();
-            NativeAdapty.SetExternalAnalyticsEnabled(enabled, callback);
-            return callback.Task;
+            throw new NotSupportedException();
         }
 
         public Task UpdateAttributionAsync(Object attribution, AttributionNetwork attributionNetwork, string userId)
@@ -60,24 +58,38 @@ namespace XamarinAdaptySDK
             var callback = new VoidCallback();
             NativeAdapty.UpdateAttribution(attribution, attributionNetwork switch
             {
-                AttributionNetwork.Adjust => AttributionType.Adjust,
-                AttributionNetwork.AppsFlyer => AttributionType.Appsflyer,
-                AttributionNetwork.Branch => AttributionType.Branch,
-                _ => AttributionType.Custom
+                AttributionNetwork.Adjust => AdaptyAttributionSource.Adjust,
+                AttributionNetwork.AppsFlyer => AdaptyAttributionSource.Appsflyer,
+                AttributionNetwork.Branch => AdaptyAttributionSource.Branch,
+                _ => AdaptyAttributionSource.Custom
             }, userId, callback);
             return callback.Task;
         }
 
+        public async Task<Paywall?> GetPaywallAsync(string id)
+        {
+            var paywallCallback = new ResultCallback<AdaptyPaywall, Paywall>(x => x.ToPaywall());
+            NativeAdapty.GetPaywall(id, paywallCallback);
+            var paywall = await paywallCallback;
+
+            if (paywall is not null)
+            {
+                var productsCallback = new ListResultCallback<AdaptyPaywallProduct, Product>(x => x.ToProduct());
+                NativeAdapty.GetPaywallProducts(paywall.NativePaywall, productsCallback);
+                paywall.Products = (await productsCallback)?.ToArray()!;
+            }
+
+            return paywall;
+        }
+
         public Task<Paywall[]?> GetPaywallsAsync(bool forceUpdate = false)
         {
-            var callback = new GetPaywallsCallback();
-            NativeAdapty.GetPaywalls(forceUpdate, callback);
-            return callback.Task;
+            throw new NotSupportedException();
         }
 
         public Task<Product[]?> GetProductsAsync(bool forceUpdate = false)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<Promo?> GetPromoAsync()
@@ -87,17 +99,23 @@ namespace XamarinAdaptySDK
 
         public Task<PurchaserInfo?> MakePurchaseAsync(Product product)
         {
-            throw new NotImplementedException();
+            var callback = new ResultCallback<AdaptyProfile, PurchaserInfo>(x => x.ToPurchaserInfo());
+            NativeAdapty.MakePurchase(Platform.CurrentActivity, product.NativeProduct, callback);
+            return callback.Task;
         }
 
         public Task<PurchaserInfo?> RestorePurchasesAsync()
         {
-            throw new NotImplementedException();
+            var callback = new ResultCallback<AdaptyProfile, PurchaserInfo>(x => x.ToPurchaserInfo());
+            NativeAdapty.RestorePurchases(callback);
+            return callback.Task;
         }
 
         public Task<PurchaserInfo?> GetPurchaserInfoAsync(bool forceUpdate = false)
         {
-            throw new NotImplementedException();
+            var callback = new ResultCallback<AdaptyProfile, PurchaserInfo>(x => x.ToPurchaserInfo());
+            NativeAdapty.GetProfile(callback);
+            return callback.Task;
         }
     }
 }

@@ -11,6 +11,7 @@
   <attr path="api/package[@name='com.adapty.push']/class[@name='AdaptyPushHandler.Companion']" name="managedName">Push.AdaptyPushHandler.CompanionClass</attr>
   <attr path="api/package[@name='com.adapty.utils']/class[@name='AdaptyLogLevel.Companion']" name="managedName">Utils.AdaptyLogLevel.CompanionClass</attr>
   <attr path="api/package[@name='com.adapty.errors']/class[@name='AdaptyErrorCode.Companion']" name="managedName">Errors.AdaptyErrorCode.CompanionClass</attr>
+<!--  <remove-node path="api/package[@name='com.adapty.utils']/interface[@name='ErrorCallback']/method[@name='onResult' and count(parameter)=1 and parameter[1][@type='com.adapty.errors.AdaptyError']]" />-->
 <!--  <remove-node path="api/package[@name='com.adapty.errors']/class[@name='AdaptyErrorCode.Companion']" />-->
   <!--<attr path="api/package[@name='com.adapty.api']/class[@name='ApiClientRepository.Factory']" name="managedName">Api.ApiClientRepository.FactoryClass</attr>-->
   <!--<attr path="api/package[@name='com.adapty.utils']/class[@name='LogHelper.Companion']" name="managedName">LogHelper.CompanionClass</attr>-->

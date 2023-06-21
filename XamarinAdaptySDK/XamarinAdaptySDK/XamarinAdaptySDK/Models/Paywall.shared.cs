@@ -1,7 +1,7 @@
 ﻿#if IOS
 using PaywallModel = AdaptyBinding.PaywallModel;
 #elif ANDROID
-using PaywallModel = Com.Adapty.Models.PaywallModel;
+using PaywallModel = Com.Adapty.Models.AdaptyPaywall;
 #endif
 
 namespace XamarinAdaptySDK.Models
@@ -14,7 +14,7 @@ namespace XamarinAdaptySDK.Models
         public string? Name { get; init; }
         public string? DeveloperId { get; init; }
         public string? VariationId { get; init; }
-        public Product[]? Products { get; init; }
+        public Product[]? Products { get; internal set; }
         public string? VisualPaywall { get; init; }
         public string? AbTestName { get; init; }
         public string? CustomPayload { get; init; }
